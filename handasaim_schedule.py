@@ -25,6 +25,12 @@ def get_schedule_json(class_id):
     return res.json()
 
 
+def _entry_to_str(e):
+    id = str(e.get("Id", "?"))
+    space_len = len(id) + 1
+    return f'<b><code>{e.get("Id", "?"):<{space_len}}</code>{e.get("Text", "")}</b>\n<code>{"":{space_len}}</code>{e.get("Description", "")}'
+
+
 def get_schedule_html(class_id):
     data = get_schedule_json(class_id)
 
@@ -32,9 +38,7 @@ def get_schedule_html(class_id):
 
     msg = []
     msg.append(f'<b><u>יום {data[0].get("Text")}</u></b>')
-    msg.extend(
-        f'<b><code>{u.get("Id", "?")} </code>{u.get("Text", "")}</b>\n<code>  </code>{u.get("Description", "")}' 
-        for u in data[1:])
+    msg.extend(_entry_to_str(e) for e in data[1:])
     msg.append('😁')
 
     return '\n\n'.join(msg)
